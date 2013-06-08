@@ -34,14 +34,15 @@ class Chef
                           "This is known to cause this error")
           raise "rbenv not installed. Can't run rbenv_command"
         end
+        
+        env = options.key?(:env) ? options[:env] : {}
+        env = env.merge('RBENV_ROOT' => rbenv_root)
 
         default_options = {
           :user => 'rbenv',
           :group => 'rbenv',
           :cwd => rbenv_root,
-          :env => {
-            'RBENV_ROOT' => rbenv_root
-          },
+          :env => env,
           :timeout => 3600
         }
         shell_out("#{rbenv_binary_path} #{cmd}", Chef::Mixin::DeepMerge.deep_merge!(options, default_options))
